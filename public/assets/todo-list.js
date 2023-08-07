@@ -1,9 +1,13 @@
 $(document).ready(function(){
 
-  $('form').on('submit', function(){
+  $('form').on('submit', function(e){
+    e.preventDefault();
 
       var item = $('form input');
       var todo = {item: item.val()};
+
+      console.log(todo);
+      console.log(todo);
 
       $.ajax({
         type: 'POST',
