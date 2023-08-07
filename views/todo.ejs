@@ -1,24 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/assets/styles.css" type="text/css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/assets/styles.css" type="text/css" />
     <title>Todo List</title>
-</head>
-<body>
+    <script
+      src="https://code.jquery.com/jquery-1.12.3.min.js"
+      integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
     <h1>My Todo List</h1>
     <div id="todo-table">
-        <form>
-            <input type="text" name="item" placeholder="Add new item..." required>
-            <button type="submit">Add item</button>
-        </form>
-        <ul>
-            <% for(var i=0; i < todos.length; i++) { %>
-
-            };
-        </ul>
+      <form>
+        <input type="text" name="item" placeholder="Add new item..." required />
+        <button type="submit">Add item</button>
+      </form>
+      <ul>
+        <% for(var i=0; i < todos.length; i++) { %>
+        <li><%= todos[i].item %></li>
+        <% } %>
+      </ul>
     </div>
-</body>
+
+
+    <script >
+        $(document).ready(function(){
+
+$('form').on('submit', function(e){
+  e.preventDefault();
+
+    var item = $('form input');
+    var todo = {item: item.val()};
+
+    console.log(todo);
+    console.log(todo);
+
+    $.ajax({
+      type: 'POST',
+      url: '/todo',
+      data: todo,
+      success: function(data){
+        //do something with the data via front-end framework
+        location.reload();
+      }
+    });
+
+    return false;
+
+});
+
+$('li').on('click', function(){
+    var item = $(this).text().replace(/ /g, "-");
+    $.ajax({
+      type: 'DELETE',
+      url: '/todo/' + item,
+      success: function(data){
+        //do something with the data via front-end framework
+        location.reload();
+      }
+    });
+});
+
+});
+
+   </script>
+  </body>
 </html>
