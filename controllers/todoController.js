@@ -24,6 +24,8 @@ module.exports = function (app) {
     // Implement delete functionality if needed
     data = data.filter(function(todo){
       return todo.item.replace(/ /g, '-') !== req.params.item;
+
     })
+    res.json(data);
   });
 };
