@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 // connect to the database
 mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/?retryWrites=true&w=majority')
 
-
+// create a schema - this is like a blueprint
 
 var data = [
   { item: "get milk" },
