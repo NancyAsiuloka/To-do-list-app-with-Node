@@ -14,8 +14,9 @@ module.exports = function (app) {
   });
 
   app.post('/todo', urlencodedparser, function (req, res) {
-    data.push(req.body.item)
-    res.json(data);
+    var newItem = req.body.item;
+    data.push({ item: newItem });
+
   });
 
   app.delete('/todo', function (req, res) {
