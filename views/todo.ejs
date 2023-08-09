@@ -25,47 +25,42 @@
       </ul>
     </div>
 
+    <script>
+      $(document).ready(function () {
+        $("form").on("submit", function (e) {
+          e.preventDefault();
 
-    <script >
-        $(document).ready(function(){
+          var item = $("form input");
+          var todo = { item: item.val() };
 
-$('form').on('submit', function(e){
-  e.preventDefault();
+          console.log(todo);
+          console.log(todo);
 
-    var item = $('form input');
-    var todo = {item: item.val()};
+          $.ajax({
+            type: "POST",
+            url: "/todo",
+            data: todo,
+            success: function (data) {
+              //do something with the data via front-end framework
+              location.reload();
+            },
+          });
 
-    console.log(todo);
-    console.log(todo);
+          return false;
+        });
 
-    $.ajax({
-      type: 'POST',
-      url: '/todo',
-      data: todo,
-      success: function(data){
-        //do something with the data via front-end framework
-        location.reload();
-      }
-    });
-
-    return false;
-
-});
-
-$('li').on('click', function(){
-    var item = $(this).text().replace(/ /g, "-");
-    $.ajax({
-      type: 'DELETE',
-      url: '/todo/' + item,
-      success: function(data){
-        //do something with the data via front-end framework
-        location.reload();
-      }
-    });
-});
-
-});
-
-   </script>
+        $("li").on("click", function () {
+          var item = $(this).text().replace(/ /g, "-");
+          $.ajax({
+            type: "DELETE",
+            url: "/todo/" + item,
+            success: function (data) {
+              //do something with the data via front-end framework
+              location.reload();
+            },
+          });
+        });
+      });
+    </script>
   </body>
 </html>
