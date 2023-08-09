@@ -5,6 +5,9 @@ var mongoose = require("mongoose");
 mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/?retryWrites=true&w=majority')
 
 // create a schema - this is like a blueprint
+var todoSchema = new mongoose.Schema({
+
+});
 
 var data = [
   { item: "get milk" },
