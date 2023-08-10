@@ -20,6 +20,9 @@ mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/?retryWrites=
       .then(() => {
         console.log('Item saved');
       })
+      .then(() => {
+        mongoose.connection.close(); // Close the connection after saving
+      })
       .catch((error) => {
         console.error('Error saving item:', error);
       });
