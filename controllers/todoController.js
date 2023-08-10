@@ -1,59 +1,68 @@
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
+const express = require("express");
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/test?retryWrites=true&w=majority', {
+const app = express();
+
+mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/test', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
   .then(() => {
     console.log('Connected to MongoDB Atlas');
-
-    // Create a schema - this is like a blueprint
-    const todoSchema = new mongoose.Schema({
-      item: String
-    });
-
-    const Todo = mongoose.model('Todo', todoSchema);
-    const itemOne = new Todo({ item: 'buy flowers' });
-
-    itemOne.save()
-      .then(() => {
-        console.log('Item saved');
-      })
-      .catch((error) => {
-        console.error('Error saving item:', error);
-      });
   })
   .catch((error) => {
     console.error('Error connecting to MongoDB Atlas:', error);
   });
 
+const todoSchema = new mongoose.Schema({
+  item: String
+});
 
-var data = [
-  { item: "get milk" },
-  { item: "work dog" },
-  { item: "kick some coding ass" },
-];
+const Todo = mongoose.model('Todo', todoSchema);
 
-var urlencodedparser = bodyParser.urlencoded({ extended: false });
+app.use(bodyParser.urlencoded({ extended: false }));
 
-module.exports = function (app) {
-  app.get("/todo", function (req, res) {
-    res.render("todo", { todos: data });
+app.get("/todo", function (req, res) {
+  Todo.find({}, (err, todos) => {
+    if (err) {
+      console.error('Error fetching todos:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.render("todo", { todos: todos });
+    }
   });
+});
 
-  app.post("/todo", urlencodedparser, function (req, res) {
-    var newItem = req.body.item;
-    data.push({ item: newItem });
-    res.json(data);
-  });
+app.post("/todo", function (req, res) {
+  const newItem = req.body.item;
+  const item = new Todo({ item: newItem });
 
-  app.delete("/todo/:item", function (req, res) {
-    // Implement delete functionality if needed
-    data = data.filter(function(todo){
-      return todo.item.replace(/ /g, '-') !== req.params.item;
-
+  item.save()
+    .then(() => {
+      console.log('Item saved');
+      res.redirect('/todo'); // Redirect to the todo page
     })
-    res.json(data);
+    .catch((error) => {
+      console.error('Error saving item:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+app.delete("/todo/:item", function (req, res) {
+  const itemToDelete = req.params.item;
+
+  Todo.deleteOne({ item: itemToDelete }, (err) => {
+    if (err) {
+      console.error('Error deleting item:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      console.log('Item deleted');
+      res.sendStatus(200);
+    }
   });
-};
+});
+
+app.listen(3000, function () {
+  console.log('Listening on port 3000');
+});
