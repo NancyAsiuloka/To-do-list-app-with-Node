@@ -1,42 +1,39 @@
-var bodyParser = require("body-parser");
-const mongoose = require('mongoose');
-const connection_url = process.env.DATABASE_URL
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const connection_url = process.env.DATABASE_URL;
 
 if (!connection_url) {
-  throw new Error("Invalid connection url");
+  throw new Error("Invalid connection URL");
 }
 
-mongoose.connect(connection_url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose
+  .connect(connection_url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
-    console.log('Connected to MongoDB Atlas')
+    console.log("Connected to MongoDB Atlas");
 
-
-    // Create a schema - this is like a blueprint
     const todoSchema = new mongoose.Schema({
-      item: String
+      item: String,
     });
 
-    const Todo = mongoose.model('Todo', todoSchema);
+    const Todo = mongoose.model("Todo", todoSchema);
     const itemOne = new Todo({ item: 'buy flowers' });
 
-    itemOne.save()
+    itemOne
+      .save()
       .then(() => {
-        console.log('Item saved');
-      })
-      .then(() => {
+        console.log("Item saved");
         mongoose.connection.close(); // Close the connection after saving
       })
       .catch((error) => {
-        console.error('Error saving item:', error);
+        console.error("Error saving item:", error);
       });
   })
   .catch((error) => {
-    console.error('Error connecting to MongoDB Atlas:', error);
+    console.error("Error connecting to MongoDB Atlas:", error);
   });
-
 
 var data = [
   { item: "get milk" },
@@ -59,10 +56,9 @@ module.exports = function (app) {
 
   app.delete("/todo/:item", function (req, res) {
     // Implement delete functionality if needed
-    data = data.filter(function(todo){
-      return todo.item.replace(/ /g, '-') !== req.params.item;
-
-    })
+    data = data.filter(function (todo) {
+      return todo.item.replace(/ /g, "-") !== req.params.item;
+    });
     res.json(data);
   });
 };
