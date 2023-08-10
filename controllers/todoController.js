@@ -1,13 +1,33 @@
 var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// connect to the database
-mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/test?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => {
+    console.log('Connected to MongoDB Atlas');
 
-// create a schema - this is like a blueprint
-var todoSchema = new mongoose.Schema({
+    // Create a schema - this is like a blueprint
+    const todoSchema = new mongoose.Schema({
+      item: String
+    });
 
-});
+    const Todo = mongoose.model('Todo', todoSchema);
+    const itemOne = new Todo({ item: 'buy flowers' });
+
+    itemOne.save()
+      .then(() => {
+        console.log('Item saved');
+      })
+      .catch((error) => {
+        console.error('Error saving item:', error);
+      });
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB Atlas:', error);
+  });
+
 
 var data = [
   { item: "get milk" },
