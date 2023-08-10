@@ -1,12 +1,20 @@
 var bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const connection_url = process.env.DATABASE_URL
 
-mongoose.connect('mongodb+srv://test:test@todo.reebbkv.mongodb.net/?retryWrites=true&w=majority', {
+if (!connectionUrl) {
+  throw new Error("Invalid connection url");
+}
+
+mongoose.connect(connection_url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
   .then(() => {
-    console.log('Connected to MongoDB Atlas');
+    console.log('Connected to MongoDB Atlas')
+    .catch((err) => {
+      console.error("Failed to connect to database", err);
+    });
 
     // Create a schema - this is like a blueprint
     const todoSchema = new mongoose.Schema({
