@@ -35,11 +35,11 @@ mongoose
     console.error("Error connecting to MongoDB Atlas:", error);
   });
 
-var data = [
-  { item: "get milk" },
-  { item: "work dog" },
-  { item: "kick some coding ass" },
-];
+// var data = [
+//   { item: "get milk" },
+//   { item: "work dog" },
+//   { item: "kick some coding ass" },
+// ];
 
 var urlencodedparser = bodyParser.urlencoded({ extended: false });
 
